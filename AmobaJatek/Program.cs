@@ -9,66 +9,51 @@ namespace AmobaJatek
     class Program
     {
         //Csinálj amőba játékot, egyszr X, egyszer O-t kér be.
-        //A játéknak akkor van vége, ha egymás mellett, felett vagy kétirényba keresztbe 5 ugyanolyan szimbólum van.
+        //A játéknak akkor van vége, ha egymás mellett, felett vagy kétirányba keresztbe 5 ugyanolyan szimbólum van.
+        //Megoldani, hogy ne lehessen felülírni már meglévő karaktert.
 
-        static string[,] gameTable= new string[10,10];
+        static string[,] gameTable = new string[10, 10];
+        static int x, y;
+        static string[] jatekos = new string[] {"X","O"};
         static void Main(string[] args)
         {
-            int x1, x2, y1, y2;
-
-            for (int i = 0; i < gameTable.GetLength(0); i++) //feltölti szóközzel a mátrixot
+            
+            for (int i = 0; i < gameTable.GetLength(0); i++) //feltölti csillaggal
             {
                 for (int j = 0; j < gameTable.GetLength(1); j++)
                 {
-                    gameTable[i, j] = " ";
+                    gameTable[i, j] = "*";
                 }
             }
-            
-            while(!isOver())
+
+            int k = 0;
+
+            do
             {
-                
-                Console.WriteLine("Hova tegyem az X-et, majd a O-t?");
-
-                                
-                Console.WriteLine("X Koordináta 1: ");
-                x1 = int.Parse(Console.ReadLine());
-                Console.WriteLine("X Koordináta 2: ");
-                x2 = int.Parse(Console.ReadLine());
-
-                gameTable[x1, x2] = "X";
                 writeOut();
-
-                Console.WriteLine("O Koordináta 1: ");
-                y1 = int.Parse(Console.ReadLine());
-                Console.WriteLine("O Koordináta 2: ");
-                y2 = int.Parse(Console.ReadLine());
-
-                if (gameTable[y1, y2] == "X")
+                Console.WriteLine("Hova rajzolsz?");
+                Console.WriteLine("A(z) " + jatekos[k % 2] + " 1. koordinátája: ");
+                x = int.Parse(Console.ReadLine());
+                Console.WriteLine("A(z) " + jatekos[k % 2] + " 2. koordinátája: ");
+                y = int.Parse(Console.ReadLine());
+                
+                if (gameTable[x, y] == "*")
                 {
-                   while(gameTable[y1, y2] == "X")
-                   { 
-                        Console.WriteLine("Add meg újra az O helyét:");
-                        Console.WriteLine("O Koordináta 1: ");
-                        y1 = int.Parse(Console.ReadLine());
-                        Console.WriteLine("O Koordináta 2: ");
-                        y2 = int.Parse(Console.ReadLine());
-                   }
-                    
-                }
-                else
-                {
-                    gameTable[y1, y2] = "O";
-                    writeOut();
+                    gameTable[x, y] = jatekos[k % 2];
+                    k++; 
                 }
                 
-            }
+                Console.Clear();
 
+            } while (!isOver(x, y));
+
+            Console.WriteLine("Nyert a(z) " + jatekos[k % 2 - 1]);
+            Console.ReadLine();
         }
 
-        private static bool isOver()
-        {
-           
-            return false;
+        private static bool isOver(int x, int y)
+        {            
+            return Darabszam(gameTable, x, y, 0, 1) >= 5 || Darabszam(gameTable, x, y, 1, 0) >=5 || Darabszam(gameTable, x, y, 1, 1) >= 5 || Darabszam(gameTable, x, y, 1, -1) >= 5;
         }
 
         private static void writeOut()
@@ -83,6 +68,31 @@ namespace AmobaJatek
             }
         }
 
+        private static int Darabszam(string[,] matrix, int x, int y, int iranyX, int iranyY)
+        {
+            int x2 = x + iranyX;
+            int y2 = y + iranyY;
+            int db = 1;
 
+            while (x2 > 0 && x2 < matrix.GetLength(0) && y2 > 0 && y2 < matrix.GetLength(1) && matrix[x,y] == matrix[x2,y2])
+            {
+                db++;
+                x2 += iranyX;
+                y2 += iranyY;
+            }
+
+            x2 = x - iranyX;
+            y2 = y - iranyY;
+
+            while (x2 > 0 && x2 < matrix.GetLength(0) && y2 > 0 && y2 < matrix.GetLength(1) && matrix[x, y] == matrix[x2, y2])
+            {
+                db++;
+                x2 -= iranyX;
+                y2 -= iranyY;
+            }
+
+            return db;
+        }
+        
     }
 }
