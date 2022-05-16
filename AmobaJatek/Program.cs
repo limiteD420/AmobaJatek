@@ -47,7 +47,7 @@ namespace AmobaJatek
 
             } while (!isOver(x, y));
 
-            Console.WriteLine("Nyert a(z) " + jatekos[k % 2 - 1]);
+            Console.WriteLine("Nyert a(z) " + jatekos[(k - 1) % 2]);
             Console.ReadLine();
         }
 
@@ -74,7 +74,7 @@ namespace AmobaJatek
             int y2 = y + iranyY;
             int db = 1;
 
-            while (x2 > 0 && x2 < matrix.GetLength(0) && y2 > 0 && y2 < matrix.GetLength(1) && matrix[x,y] == matrix[x2,y2])
+            while (x2 >= 0 && x2 < matrix.GetLength(0)-1 && y2 >= 0 && y2 < matrix.GetLength(1)-1 && matrix[x,y] == matrix[x2,y2])
             {
                 db++;
                 x2 += iranyX;
@@ -84,7 +84,7 @@ namespace AmobaJatek
             x2 = x - iranyX;
             y2 = y - iranyY;
 
-            while (x2 > 0 && x2 < matrix.GetLength(0) && y2 > 0 && y2 < matrix.GetLength(1) && matrix[x, y] == matrix[x2, y2])
+            while (x2 >= 0 && x2 < matrix.GetLength(0)-1 && y2 >= 0 && y2 < matrix.GetLength(1)-1 && matrix[x, y] == matrix[x2, y2])
             {
                 db++;
                 x2 -= iranyX;
